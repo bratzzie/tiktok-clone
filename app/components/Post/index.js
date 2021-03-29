@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   Touchable,
   TouchableWithoutFeedback,
   Image,
+  TouchableOpacity,
 } from "react-native";
 import { Video } from "expo-av";
 import VideoPlayer from "expo-video-player";
@@ -13,12 +14,25 @@ import styled from "styled-components/native";
 import { PlayIcon } from "../Icons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import FontAwesome5Brands from "react-native-vector-icons/FontAwesome5";
-const index = () => {
+import parseErrorStack from "react-native/Libraries/Core/Devtools/parseErrorStack";
+const index = (props) => {
+  const ContainerHeight = Dimensions.get("window").height;
+  const [post, setPost] = useState(props.post);
+  const [isLiked, setIsLiked] = useState(false);
   const onPlayPausePress = () => {
     console.warn("Post");
   };
+
+  const like = () => {
+    const likesToAdd = isLiked ? -1 : 1;
+    setPost({
+      ...post,
+      likes: post.likes + likesToAdd,
+    });
+    setIsLiked(!isLiked);
+  };
   return (
-    <Container>
+    <Container style={{ height: ContainerHeight }}>
       <VideoWrapper>
         <MyVideoPlayer
           pauseIcon={PlayIcon}
@@ -28,8 +42,7 @@ const index = () => {
             shouldPlay: true,
             resizeMode: "cover",
             source: {
-              uri:
-                "https://assets.mixkit.co/videos/preview/mixkit-mysterious-pale-looking-fashion-woman-at-winter-39878-large.mp4",
+              uri: post.videoURL,
             },
           }}
           inFullscreen={true}
@@ -39,50 +52,53 @@ const index = () => {
           videobackground="transparent"
         />
       </VideoWrapper>
+      <RightWrapper>
+        <ImageWrapper>
+          <Avatar
+            source={{
+              uri: post.user.userURL,
+            }}
+          />
+        </ImageWrapper>
+        <IconsWrapper>
+          <TouchableOpacity onPress={like}>
+            <FontAwesome5
+              name={"heart"}
+              size={35}
+              color={isLiked ? "red" : "#fff"}
+            />
+            <Num>{post.likes}</Num>
+          </TouchableOpacity>
+          <FontAwesome5
+            name={"comment-dots"}
+            size={35}
+            color={"#fff"}
+            style={{ marginTop: 10 }}
+          />
+          <Num>{post.comments}</Num>
+          <FontAwesome5
+            name={"reply"}
+            size={35}
+            color={"#fff"}
+            style={{ marginTop: 10 }}
+          />
+          <Num>{post.shares}</Num>
+        </IconsWrapper>
+      </RightWrapper>
       <NavWrapepr>
-        <RightWrapper>
-          <ImageWrapper>
-            <Avatar
-              source={{
-                uri:
-                  "https://images.pexels.com/photos/3410386/pexels-photo-3410386.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-              }}
-            />
-          </ImageWrapper>
-          <IconsWrapper>
-            <FontAwesome5 name={"heart"} size={35} color={"#fff"} />
-            <Num>123234532</Num>
-            <FontAwesome5
-              name={"comment-dots"}
-              size={35}
-              color={"#fff"}
-              style={{ marginTop: 10 }}
-            />
-            <Num>123234532</Num>
-            <FontAwesome5
-              name={"reply"}
-              size={35}
-              color={"#fff"}
-              style={{ marginTop: 10 }}
-            />
-            <Num>123234532</Num>
-          </IconsWrapper>
-        </RightWrapper>
-
         <BottomWrapper>
           <View>
-            <Name>@sailormoon</Name>
-            <Desc>Look at her!</Desc>
+            <Name>@{post.user.username}</Name>
+            <Desc>{post.description}</Desc>
             <SongDesc>
               <FontAwesome5Brands name={"itunes-note"} size={20} color="#fff" />
-              <SongName>DALI - ムーンライト伝説</SongName>
+              <SongName>{post.songName}</SongName>
             </SongDesc>
           </View>
 
           <SongImage
             source={{
-              uri:
-                "https://cdn.vox-cdn.com/thumbor/ff2XWi9DZb5-of-rsAut62vmQAc=/1400x1400/filters:format(png)/cdn.vox-cdn.com/uploads/chorus_asset/file/19917090/vlcsnap_2016_01_11_14h29m32s843.png",
+              uri: post.songImage,
             }}
           />
         </BottomWrapper>
@@ -156,7 +172,7 @@ const Avatar = styled.Image`
   width: 50px;
   height: 50px;
   border: 2px solid #fff;
-  border-radius: 25;
+  border-radius: 25px;
 `;
 const IconsWrapper = styled.View`
   align-items: center;
