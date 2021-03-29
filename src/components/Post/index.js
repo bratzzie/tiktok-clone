@@ -82,13 +82,13 @@ const index = (props) => {
             <Desc>{post.description}</Desc>
             <SongDesc>
               <FontAwesome5Brands name={"itunes-note"} size={20} color="#fff" />
-              <SongName>{post.song}</SongName>
+              <SongName>{post.song.name}</SongName>
             </SongDesc>
           </View>
 
           <SongImage
             source={{
-              uri: post.songImage,
+              uri: post.song.imageUri,
             }}
           />
         </BottomWrapper>
