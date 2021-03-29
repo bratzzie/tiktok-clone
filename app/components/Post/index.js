@@ -1,22 +1,12 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  Dimensions,
-  Touchable,
-  TouchableWithoutFeedback,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-import { Video } from "expo-av";
+import { View, Dimensions, TouchableOpacity } from "react-native";
 import VideoPlayer from "expo-video-player";
 import styled from "styled-components/native";
 import { PlayIcon } from "../Icons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import FontAwesome5Brands from "react-native-vector-icons/FontAwesome5";
-import parseErrorStack from "react-native/Libraries/Core/Devtools/parseErrorStack";
 const index = (props) => {
-  const ContainerHeight = Dimensions.get("window").height;
+  const ContainerHeight = Dimensions.get("window").height - 20;
   const [post, setPost] = useState(props.post);
   const [isLiked, setIsLiked] = useState(false);
   const onPlayPausePress = () => {
@@ -52,47 +42,47 @@ const index = (props) => {
           videobackground="transparent"
         />
       </VideoWrapper>
-      <RightWrapper>
-        <ImageWrapper>
-          <Avatar
-            source={{
-              uri: post.user.userURL,
-            }}
-          />
-        </ImageWrapper>
-        <IconsWrapper>
-          <TouchableOpacity onPress={like}>
-            <FontAwesome5
-              name={"heart"}
-              size={35}
-              color={isLiked ? "red" : "#fff"}
-            />
-            <Num>{post.likes}</Num>
-          </TouchableOpacity>
-          <FontAwesome5
-            name={"comment-dots"}
-            size={35}
-            color={"#fff"}
-            style={{ marginTop: 10 }}
-          />
-          <Num>{post.comments}</Num>
-          <FontAwesome5
-            name={"reply"}
-            size={35}
-            color={"#fff"}
-            style={{ marginTop: 10 }}
-          />
-          <Num>{post.shares}</Num>
-        </IconsWrapper>
-      </RightWrapper>
       <NavWrapepr>
+        <RightWrapper>
+          <ImageWrapper>
+            <Avatar
+              source={{
+                uri: post.user.userURL,
+              }}
+            />
+          </ImageWrapper>
+          <IconsWrapper>
+            <TouchableOpacity onPress={like}>
+              <FontAwesome5
+                name={"heart"}
+                size={35}
+                color={isLiked ? "red" : "#fff"}
+              />
+              <Num>{post.likes}</Num>
+            </TouchableOpacity>
+            <FontAwesome5
+              name={"comment-dots"}
+              size={35}
+              color={"#fff"}
+              style={{ marginTop: 10 }}
+            />
+            <Num>{post.comments}</Num>
+            <FontAwesome5
+              name={"reply"}
+              size={35}
+              color={"#fff"}
+              style={{ marginTop: 10 }}
+            />
+            <Num>{post.shares}</Num>
+          </IconsWrapper>
+        </RightWrapper>
         <BottomWrapper>
           <View>
             <Name>@{post.user.username}</Name>
             <Desc>{post.description}</Desc>
             <SongDesc>
               <FontAwesome5Brands name={"itunes-note"} size={20} color="#fff" />
-              <SongName>{post.songName}</SongName>
+              <SongName>{post.song}</SongName>
             </SongDesc>
           </View>
 
@@ -111,7 +101,6 @@ export default index;
 const Container = styled.View`
   width: 100%;
   background-color: transparent;
-  flex-direction: column;
 `;
 const VideoWrapper = styled.View`
   position: absolute;
@@ -158,6 +147,14 @@ const SongName = styled.Text`
   color: #fff;
   font-size: 16px;
 `;
+const SongImage = styled.Image`
+  width: 45px;
+  height: 45px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #3a404a;
+  border-radius: 25px;
+`;
 const RightWrapper = styled.View`
   flex-direction: column;
   align-self: flex-end;
@@ -183,12 +180,4 @@ const Num = styled.Text`
   font-size: 12px;
   font-weight: 600;
   margin-top: 5px;
-`;
-const SongImage = styled.Image`
-  width: 45px;
-  height: 45px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #3a404a;
-  border-radius: 25;
 `;
