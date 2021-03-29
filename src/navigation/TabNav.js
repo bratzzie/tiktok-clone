@@ -4,6 +4,7 @@ import Home from "../screens/Home";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import add from "../../assets/add.png";
 import { Image } from "react-native";
+import CameraScreen from "../screens/Camera/CameraScreen";
 const Tab = createBottomTabNavigator();
 
 const TabNav = () => {
@@ -36,7 +37,7 @@ const TabNav = () => {
       />
       <Tab.Screen
         name="Add"
-        component={Home}
+        component={CameraScreen}
         options={{
           tabBarIcon: ({}) => (
             <Image source={add} style={{ height: 35, resizeMode: "contain" }} />
