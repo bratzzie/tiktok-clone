@@ -150,9 +150,7 @@ const SongName = styled.Text`
 const SongImage = styled.Image`
   width: 45px;
   height: 45px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #3a404a;
+  border: 5px solid #3a404a;
   border-radius: 25px;
 `;
 const RightWrapper = styled.View`

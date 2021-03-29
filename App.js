@@ -2,7 +2,10 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import "react-native-gesture-handler";
-import RootNavigation from "./app/navigation";
+import RootNavigation from "./src/navigation";
+import Amplify from "aws-amplify";
+import config from "./src/aws-exports";
+Amplify.configure(config);
 export default function App() {
   return (
     <>
