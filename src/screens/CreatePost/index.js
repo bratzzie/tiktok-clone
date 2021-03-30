@@ -1,10 +1,54 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, TextInput, View } from "react-native";
+import { Storage, API, graphqlOperation, Auth } from "aws-amplify";
+import { createPost } from "../../graphql/mutations";
 import styled from "styled-components/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
+import { v4 as uuidv4 } from "uuid";
+
 const index = () => {
   const [description, setDescription] = useState("");
+  const route = useRoute();
+  const [videoKey, setVideoKey] = useState(null);
+  const navigation = useNavigation();
 
-  const publish = () => {};
+  const uploadToStorage = async (imagePath) => {
+    try {
+      const response = await fetch(imagePath);
+      const blob = await response.blob();
+      const filename = `${uuidv4()}.mp4`;
+      const s3Response = await Storage.put(filename, blob);
+      setVideoKey(s3Response.key);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const publish = async () => {
+    if (!videoKey) {
+      console.warn("There is no video to be uploaded");
+      return;
+    }
+    try {
+      const userInfo = await Auth.currentAuthenticatedUser();
+      const newPost = {
+        videoURL: videoKey,
+        description: description,
+        userID: userInfo.attributes.sub,
+        songID: "43f7699d-a6c1-4fa1-b868-9c6cbe1f1a9b",
+      };
+      const response = await API.graphql(
+        graphqlOperation(createPost, { input: newPost })
+      );
+      navigation.navigate("Home", { screen: "Home" });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    uploadToStorage(route?.params?.videoURL);
+  }, []);
+
   return (
     <Section>
       <Input

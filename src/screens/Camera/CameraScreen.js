@@ -279,3 +279,12 @@ const styles = StyleSheet.create({
 //     color: "white",
 //   },
 // });
+
+//const onRecord = async() => {
+//   if(isRecording){
+//     camera.current.stopRecording()
+//   } else{
+//     const data = await camera.current.recordAsync()
+//     navigation.navigate('CreatePost', {videoURL: data.uri})
+//   }
+// }

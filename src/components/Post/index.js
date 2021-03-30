@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Dimensions, TouchableOpacity } from "react-native";
 import VideoPlayer from "expo-video-player";
 import styled from "styled-components/native";
@@ -9,6 +9,7 @@ const index = (props) => {
   const ContainerHeight = Dimensions.get("window").height - 20;
   const [post, setPost] = useState(props.post);
   const [isLiked, setIsLiked] = useState(false);
+  const [videoURL, setVideoURL] = useState("");
   const onPlayPausePress = () => {
     console.warn("Post");
   };
@@ -21,6 +22,17 @@ const index = (props) => {
     });
     setIsLiked(!isLiked);
   };
+
+  const getVideoURL = async () => {
+    if (post.videoURL.startsWith("http")) {
+      setVideoURL(post.videoURL);
+    } else {
+      setVideoURL(await Storage.get(post.videoURL));
+    }
+  };
+  useEffect(() => {
+    getVideoURL();
+  }, []);
   return (
     <Container style={{ height: ContainerHeight }}>
       <VideoWrapper>
@@ -32,7 +44,7 @@ const index = (props) => {
             shouldPlay: true,
             resizeMode: "cover",
             source: {
-              uri: post.videoURL,
+              uri: videoURL,
             },
           }}
           inFullscreen={true}
