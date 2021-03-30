@@ -5,14 +5,12 @@ import styled from "styled-components/native";
 import { PlayIcon } from "../Icons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import FontAwesome5Brands from "react-native-vector-icons/FontAwesome5";
+import { Storage } from "aws-amplify";
 const index = (props) => {
   const ContainerHeight = Dimensions.get("window").height - 20;
   const [post, setPost] = useState(props.post);
   const [isLiked, setIsLiked] = useState(false);
   const [videoURL, setVideoURL] = useState("");
-  const onPlayPausePress = () => {
-    console.warn("Post");
-  };
 
   const like = () => {
     const likesToAdd = isLiked ? -1 : 1;
@@ -26,6 +24,7 @@ const index = (props) => {
   const getVideoURL = async () => {
     if (post.videoURL.startsWith("http")) {
       setVideoURL(post.videoURL);
+      return;
     } else {
       setVideoURL(await Storage.get(post.videoURL));
     }
@@ -97,12 +96,13 @@ const index = (props) => {
               <SongName>{post.song.name}</SongName>
             </SongDesc>
           </View>
-
-          <SongImage
-            source={{
-              uri: post.song.imageUri,
-            }}
-          />
+          <SongImageWrapper>
+            <SongImage
+              source={{
+                uri: post.song.imageUri,
+              }}
+            />
+          </SongImageWrapper>
         </BottomWrapper>
       </NavWrapepr>
     </Container>
@@ -159,10 +159,17 @@ const SongName = styled.Text`
   color: #fff;
   font-size: 16px;
 `;
-const SongImage = styled.Image`
+const SongImageWrapper = styled.View`
   width: 45px;
   height: 45px;
   border: 5px solid #3a404a;
+  border-radius: 25px;
+  align-items: center;
+  justify-content: center;
+`;
+const SongImage = styled.Image`
+  width: 35px;
+  height: 35px;
   border-radius: 25px;
 `;
 const RightWrapper = styled.View`
@@ -174,12 +181,17 @@ const RightWrapper = styled.View`
   align-items: center;
   margin-right: 5px;
 `;
-const ImageWrapper = styled.View``;
-const Avatar = styled.Image`
+const ImageWrapper = styled.View`
   width: 50px;
   height: 50px;
   border: 2px solid #fff;
   border-radius: 25px;
+  justify-content: center;
+  align-items: center;
+`;
+const Avatar = styled.Image`
+  width: 40px;
+  height: 40px;
 `;
 const IconsWrapper = styled.View`
   align-items: center;

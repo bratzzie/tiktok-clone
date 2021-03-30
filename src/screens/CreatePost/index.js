@@ -4,6 +4,7 @@ import { Storage, API, graphqlOperation, Auth } from "aws-amplify";
 import { createPost } from "../../graphql/mutations";
 import styled from "styled-components/native";
 import { useRoute, useNavigation } from "@react-navigation/native";
+import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 
 const index = () => {
@@ -11,12 +12,15 @@ const index = () => {
   const route = useRoute();
   const [videoKey, setVideoKey] = useState(null);
   const navigation = useNavigation();
-
+  useEffect(() => {
+    uploadToStorage(route.params.videoURL);
+  }, []);
   const uploadToStorage = async (imagePath) => {
     try {
       const response = await fetch(imagePath);
       const blob = await response.blob();
-      const filename = `${uuidv4()}.mp4`;
+      // const filename = `${uuidv4()}.mp4`;
+      const filename = "filename.mp4";
       const s3Response = await Storage.put(filename, blob);
       setVideoKey(s3Response.key);
     } catch (error) {
@@ -45,10 +49,6 @@ const index = () => {
     }
   };
 
-  useEffect(() => {
-    uploadToStorage(route?.params?.videoURL);
-  }, []);
-
   return (
     <Section>
       <Input
@@ -59,7 +59,7 @@ const index = () => {
       />
       <Button onPress={publish}>
         <View>
-          <Text style={{ color: "#fff", fontWeight: 600 }}>Publish</Text>
+          <Text style={{ color: "#fff" }}>Publish</Text>
         </View>
       </Button>
     </Section>

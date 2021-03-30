@@ -9,7 +9,12 @@ import config from "./src/aws-exports";
 import { Auth, API, graphqlOperation } from "aws-amplify";
 import { createUser } from "./src/graphql/mutations";
 import { getUser } from "./src/graphql/queries";
-Amplify.configure(config);
+Amplify.configure({
+  ...config,
+  Analytics: {
+    disabled: true,
+  },
+});
 function App() {
   useEffect(() => {
     const fetchUser = async () => {
